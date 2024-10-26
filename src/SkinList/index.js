@@ -1,9 +1,9 @@
 import { SkinAsset } from "../SkinAsset";
 
-function SkinList({ children }) {
+function SkinList(props) {
     return(
-        <ul className='SkinList'>
-            {children}
+        <ul>
+            {props.children}
         </ul>
     );
 }

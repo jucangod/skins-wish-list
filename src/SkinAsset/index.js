@@ -1,21 +1,21 @@
-import './Assets'
-
-const images = [];
-for (let i = 1; i < 242; i++) {
-    images.push(require(`./Assets/image(${i}).jpg`));
-}
+import './SkinAsset.css'
 
 function SkinAsset() {
+    const images = [];
+
+    for (let i = 1; i < 6; i++){
+        images.push(require(`../Assets/image(${i}).jpg`))
+    };
+
     return(
-        <div>
-            {images.map((image, index) => {
-                <img 
-                    key={index}
-                    src={image}
-                    alt={`Skin ${index}`}
-                />
-            })}
-        </div>
+        images.map((src, index) => (
+            <img 
+                className='skin-image'
+                key={index}
+                src={src}
+                alt={`Skin ${index + 1}`}
+            />
+        ))
     );
 }
 
