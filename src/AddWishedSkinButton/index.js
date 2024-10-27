@@ -1,11 +1,10 @@
 import React from "react";
 
-function AddWishedSkinButton({ turnWishOn }) {
-
+function AddWishedSkinButton({ toggleWishButton }) {
     return(
         <button
             className="AddWishedSkinsButton"
-            onClick={turnWishOn}
+            onClick={toggleWishButton}
         >
             Wished Skins
         </button>

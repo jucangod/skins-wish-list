@@ -1,21 +1,38 @@
-import { OwnedSkin } from '../OwnedSkins'
-import { WishSkin } from '../WishSkins'
-import { MissingSkin } from '../MissingSkins'
+import React from 'react'
+import { SkinList } from '../SkinList';
 import { AddWishedSkinButton } from '../AddWishedSkinButton'
-import { AddOwnedSkinButton } from '../AddOwnedSkinButton'
 import { DeleteSkinButton } from '../DeleteSkinButton'
-import { SkinsMenu } from '../SkinsMenu'
-import { SkinsWishList } from '../SkinsWishList'
-import { SkinsOwnedList } from '../SkinsOwnedList'
-import { SkinsMissingList } from '../SkinsMissingList'
-import { SkinsMissingButton } from '../SkinsMissingButton'
-import { SkinsOwnedButton } from '../SkinsOwnedButton'
-import { SkinsWishButton } from '../SkinsWishButton'
+import { AddOwnedSkinButton } from '../AddOwnedSkinButton'
+import { SkinContext } from '../SkinContext';
 
-function AppUI() {
+function AppUI(){
+    const {
+        toggleWishButton,
+        toggleOwnButton,
+        toggleDeleteButton,
+        addOwnSkin,
+        addWishSkin,
+        deleteSkin,
+    } = React.useContext(SkinContext);
+
     return(
-        <React.Fragment>
-            <SkinsMenu>
+        <>
+            <AddWishedSkinButton
+                toggleWishButton={toggleWishButton}
+            />
+            <AddOwnedSkinButton
+                toggleOwnButton={toggleOwnButton}
+            />
+            <DeleteSkinButton
+                toggleDeleteButton={toggleDeleteButton}
+            />
+
+            <SkinContext.Consumer>
+                <SkinList>
+                    
+                </SkinList>
+            </SkinContext.Consumer>
+            {/*<SkinsMenu>
                 <SkinsMissingButton
                     showMissingList={showMissingList}
                 >
@@ -66,16 +83,13 @@ function AppUI() {
                 </SkinsOwnedButton>
             </SkinsMenu>
 
-            <AddWishedSkinButton
-                turnWishOn={toggleWishButton}
-            />
             <AddOwnedSkinButton
                 turnOwnOn={toggleOwnButton}
             />
             <DeleteSkinButton 
                 turnDeleteOn={toggleDeleteButton}
-            />
-        </React.Fragment>
+            /> */}
+        </>
     );
 }
 

@@ -1,11 +1,10 @@
 import React from "react";
 
-function AddOwnedSkinButton({ turnOwnOn }) {
-
+function AddOwnedSkinButton({ toggleOwnButton }) {
     return(
         <button
             className="AddOwnedSkinButton"
-            onClick={turnOwnOn}
+            onClick={toggleOwnButton}
         >
             Owned Skins
         </button>
