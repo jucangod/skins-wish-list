@@ -1,9 +1,19 @@
 import { AddWishedSkinButton } from './AddWishedSkinButton'
 import { AddOwnedSkinButton } from './AddOwnedSkinButton'
 import { DeleteSkinButton } from './DeleteSkinButton'
+import { SkinsMenu } from './SkinsMenu'
+import { SkinsWishList } from './SkinsWishList'
+import { SkinsOwnedList } from './SkinsOwnedList'
+import { SkinsMissingList } from './SkinsMissingList'
 import { SkinList } from './SkinList'
 import { SkinItem } from './SkinItem'
+import { SkinsMissingButton } from './SkinsMissingButton'
+import { SkinsOwnedButton } from './SkinsOwnedButton'
+import { SkinsWishButton } from './SkinsWishButton'
 import React from 'react'
+import { OwnedSkin } from './OwnedSkins'
+import { WishSkin } from './WishSkins'
+import { MissingSkin } from './MissingSkins'
 
 const defaultSkins = [
     {img: require('./Assets/image(1).jpg'), isOwned: false, isWished: false, name: 'image(1)'},
@@ -20,6 +30,9 @@ function App() {
     const [ownButton, setOwnButton] = React.useState(false);
     const [deleteButton, setDeleteButton] = React.useState(false);
     const [activeButton, setActiveButton] = React.useState('');
+    const [missingSkin, setMissingSkin] = React.useState([]);
+    const [ownedSkin, setOwnedSkin] = React.useState([]);
+    const [wishSkin, setWishSkin] = React.useState([]);
 
     const addWishSkin = (name) => {
         const newWishSkin = [...skin];
@@ -27,7 +40,8 @@ function App() {
             (skin) => skin.name === name
         );
         newWishSkin[skinIndex].isWished = true;
-        setSkin(newWishSkin)
+        setSkin(newWishSkin);
+        setWishSkin(newWishSkin);
     }
 
     const toggleWishButton = () => {
@@ -80,10 +94,82 @@ function App() {
         console.log(deleteButton, ownButton, wishButton);
         setActiveButton('delete');
         console.log('El boton activo es delete');
-    }
+    };
+
+    const showMissingList = () => {
+        const newSkin = [...skin]
+        const missingList = newSkin.filter(
+            (skin) => (skin.isWished === false) && (skin.isOwned === false)
+        );
+        setMissingSkin(missingList);
+        console.log(missingList);
+    };
+
+    const showWishList = () => {
+        const newSkin = [...skin]
+        const wishList = newSkin.filter(
+            (skin) => skin.isWished === true
+        );
+        setWishSkin(wishList);
+        console.log(wishList);
+    };
+
+    const showOwnedList = () => {
+        const newSkin = [...skin]
+        const ownedList = newSkin.filter(
+            (skin) => skin.isOwned === true
+        );
+        setOwnedSkin(ownedList);
+        console.log(ownedList);
+    };
 
     return(
         <React.Fragment>
+            <SkinsMenu>
+                <SkinsMissingButton
+                    showMissingList={showMissingList}
+                >
+                    {missingSkin.map((skin,name) => (
+                        <SkinsMissingList 
+                            key={skin.name}
+                            img={skin.img}
+                            isOwned={skin.isOwned}
+                            isWished={skin.isWished}
+                            name={skin.name}
+                        />
+                    ))}
+                </SkinsMissingButton>
+                <SkinsWishButton
+                    showWishList={showWishList}
+                >
+                        {wishSkin.map((skin,name) => (
+                            <SkinsWishList 
+                                key={skin.name}
+                                img={skin.img}
+                                isOwned={skin.isOwned}
+                                isWished={skin.isWished}
+                                name={skin.name}
+                            />
+                        ))}
+                </SkinsWishButton>
+                <SkinsOwnedButton
+                    showOwnedList={showOwnedList}
+                >
+                    <SkinsOwnedList>
+                        {ownedSkin.map((skin,name) => (
+                            <OwnedSkin 
+                                key={skin.name}
+                                img={skin.img}
+                                isOwned={skin.isOwned}
+                                isWished={skin.isWished}
+                                name={skin.name}
+                                activeButton={activeButton}
+                            />
+                        ))}
+                    </SkinsOwnedList>
+                </SkinsOwnedButton>
+            </SkinsMenu>
+
             <AddWishedSkinButton
                 turnWishOn={toggleWishButton}
             />
@@ -93,8 +179,8 @@ function App() {
             <DeleteSkinButton 
                 turnDeleteOn={toggleDeleteButton}
             />
-
-            <SkinList>
+            
+            {/*<SkinList>
                 {defaultSkins.map((skin, name) => (
                     <SkinItem 
                         key={skin.name}
@@ -123,8 +209,7 @@ function App() {
                         }}
                     />
                 ))}
-                <SkinItem />
-            </SkinList>
+            </SkinList>*/}
         </React.Fragment>
     );
 }
