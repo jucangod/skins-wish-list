@@ -124,61 +124,21 @@ function SkinProvider({children}) {
         }
     }
 
-    // // Filtrar skins segun se requiera
-    // const missingSkins = (name) => {
-    //     const newMissingSkin = [...skin]
-    //     const missingSkin = newMissingSkin.find(
-    //         (skin) => skin.name === name
-    //     )
-    //     if(missingSkin && !missingSkin.isOwned && !missingSkin.isWished) {
-    //         setMissingSkinsList(prevList => [...prevList, missingSkin]);
-    //     }
-    //     console.log(missingSkinsList)
-    // }
+    // Filtrar skins segun se requiera
+    const missingSkins = skin.filter((skin) =>{
+        return !skin.isOwned && !skin.isWished;
+    })
 
-    // const wishSkins = () => {
-    //     const newWishSkin = [...skin]
-    //     const wishList = newWishSkin.filter(
-    //         skin => !!skin.isOwned && skin.isWished
-    //     )
-    //     setWishSkinsList(wishList)
-    //     console.log(wishSkinsList)
-    // }
-
-    // const ownedSkins = () => {
-    //     const newOwnedSkin = [...skin]
-    //     const ownedList = newOwnedSkin.filter(
-    //         skin => skin.isOwned && !!skin.isWished
-    //     )
-    //     setOwnedSkinsList(ownedList)
-    //     console.log(ownedSkinsList)
-    // }
- 
-    // //Aqui se maneja la logica para saber cuál es el boton seccion presionado
-    // const findSection = (event) => {
-    //     const classNameButton = event.target.className
-    //     switch(classNameButton){
-    //         case 'wishButton':
-    //             console.log('Presiono el boton de wish')
-    //             wishSkins()
-    //             break;
-    //         case 'ownedButton':
-    //             console.log('Presiono el boton de owned')
-    //             ownedSkins();
-    //             break;
-    //         case 'missingButton':
-    //             console.log('Presiono el boton de missing')
-    //             missingSkins();
-    //             break;
-    //     }
-    // }
+    React.useEffect(() => {
+        setMissingSkinsList(missingSkins);
+        console.log('Lista de skins faltantes: ',missingSkins);
+    }, [skin]);
 
     return(
         <SkinContext.Provider
             value={{
                 toggleButtons,
                 findActiveButton,
-                // findSection,
                 missingSkinsList,
                 ownedSkinsList,
                 wishSkinsList,

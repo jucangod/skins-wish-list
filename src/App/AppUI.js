@@ -13,7 +13,7 @@ import { SkinsWishButton } from '../SkinsWishButton'
 function AppUI(){
     const {
         toggleButtons,
-        missingSkinsList,
+        missingSkins,
         ownedSkinsList,
         wishSkinsList,
         findSection,
@@ -23,17 +23,11 @@ function AppUI(){
         <>
             <SkinsMenu>
                 <SkinsMissingButton
-                    findSection={findSection}
+                    missingSkins={missingSkins}
                 >
                     <SkinList>
-                    {missingSkinsList.map((skin) => (
                         <SkinItem
-                        key={skin.index}
-                        img={skin.img}
-                        isOwned={skin.isOwned}
-                        isWished={skin.isWished}
                         />
-                    ))}
                     </SkinList>
                 </SkinsMissingButton>
                 <SkinsWishButton
