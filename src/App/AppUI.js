@@ -1,95 +1,83 @@
 import React from 'react'
-import { SkinList } from '../SkinList';
+import { SkinList } from '../SkinList'
+import { SkinsMenu } from '../SkinsMenu'
+import { SkinItem } from '../SkinItem';
 import { AddWishedSkinButton } from '../AddWishedSkinButton'
 import { DeleteSkinButton } from '../DeleteSkinButton'
 import { AddOwnedSkinButton } from '../AddOwnedSkinButton'
 import { SkinContext } from '../SkinContext';
+import { SkinsMissingButton } from '../SkinsMissingButton'
+import { SkinsOwnedButton } from '../SkinsOwnedButton'
+import { SkinsWishButton } from '../SkinsWishButton'
 
 function AppUI(){
     const {
-        toggleWishButton,
-        toggleOwnButton,
-        toggleDeleteButton,
-        addOwnSkin,
-        addWishSkin,
-        deleteSkin,
+        toggleButtons,
+        missingSkinsList,
+        ownedSkinsList,
+        wishSkinsList,
+        findSection,
     } = React.useContext(SkinContext);
 
-    return(
+    return (
         <>
-            <AddWishedSkinButton
-                toggleWishButton={toggleWishButton}
-            />
-            <AddOwnedSkinButton
-                toggleOwnButton={toggleOwnButton}
-            />
-            <DeleteSkinButton
-                toggleDeleteButton={toggleDeleteButton}
-            />
-
-            <SkinContext.Consumer>
-                <SkinList>
-                    
-                </SkinList>
-            </SkinContext.Consumer>
-            {/*<SkinsMenu>
+            <SkinsMenu>
                 <SkinsMissingButton
-                    showMissingList={showMissingList}
+                    findSection={findSection}
                 >
-                    <SkinsMissingList>
-                        {missingSkin.map((skin,name) => (
-                            <MissingSkin 
-                                key={skin.name}
-                                img={skin.img}
-                                isOwned={skin.isOwned}
-                                isWished={skin.isWished}
-                                name={skin.name}
-                                activeButton={activeButton}
-                            />
-                        ))}
-                    </SkinsMissingList>
+                    <SkinList>
+                    {missingSkinsList.map((skin) => (
+                        <SkinItem
+                        key={skin.index}
+                        img={skin.img}
+                        isOwned={skin.isOwned}
+                        isWished={skin.isWished}
+                        />
+                    ))}
+                    </SkinList>
                 </SkinsMissingButton>
                 <SkinsWishButton
-                    showWishList={showWishList}
+                    findSection={findSection}
                 >
-                    <SkinsWishList>
-                        {wishSkin.map((skin,name) => (
-                            <WishSkin 
-                                key={skin.name}
-                                img={skin.img}
-                                isOwned={skin.isOwned}
-                                isWished={skin.isWished}
-                                name={skin.name}
-                                activeButton={activeButton}
-                            />
-                        ))}
-                    </SkinsWishList>
+                    <SkinList>
+                    {wishSkinsList.map((skin) => (
+                        <SkinItem
+                        key={skin.index}
+                        img={skin.img}
+                        isOwned={skin.isOwned}
+                        isWished={skin.isWished}
+                        />
+                    ))}
+                    </SkinList>
                 </SkinsWishButton>
                 <SkinsOwnedButton
-                    showOwnedList={showOwnedList}
+                    findSection={findSection}
                 >
-                    <SkinsOwnedList>
-                        {ownedSkin.map((skin,name) => (
-                            <OwnedSkin 
-                                key={skin.name}
-                                img={skin.img}
-                                isOwned={skin.isOwned}
-                                isWished={skin.isWished}
-                                name={skin.name}
-                                activeButton={activeButton}
-                            />
-                        ))}
-                    </SkinsOwnedList>
+                    <SkinList>
+                    {ownedSkinsList.map((skin) => (
+                        <SkinItem
+                        key={skin.index}
+                        img={skin.img}
+                        isOwned={skin.isOwned}
+                        isWished={skin.isWished}
+                        />
+                    ))}
+                    </SkinList>
                 </SkinsOwnedButton>
             </SkinsMenu>
 
-            <AddOwnedSkinButton
-                turnOwnOn={toggleOwnButton}
+            <AddWishedSkinButton 
+                toggleButtons={toggleButtons}
             />
-            <DeleteSkinButton 
-                turnDeleteOn={toggleDeleteButton}
-            /> */}
-        </>
+            <AddOwnedSkinButton
+                toggleButtons={toggleButtons}
+            />
+            <DeleteSkinButton
+                toggleButtons={toggleButtons}
+            />
+
+            <SkinItem></SkinItem>
+      </>
     );
 }
 

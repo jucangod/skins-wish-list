@@ -1,11 +1,11 @@
 import React from "react";
 
-function DeleteSkinButton({ toggleDeleteButton }) {
+function DeleteSkinButton({ toggleButtons }) {
 
     return(
         <button
-            className="AddDeleteSkinsButton"
-            onClick={toggleDeleteButton}
+            className="DeleteSkinsButton"
+            onClick={toggleButtons}
         >
             Delete Skins
         </button>

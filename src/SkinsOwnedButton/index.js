@@ -1,7 +1,8 @@
-function SkinsOwnedButton({showOwnedList}) {
+function SkinsOwnedButton({findSection}) {
     return(
         <button
-            onClick={showOwnedList}
+            className="ownedButton"
+            // onClick={findSection}
         >
             Own
         </button>

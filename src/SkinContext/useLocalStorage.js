@@ -1,19 +1,27 @@
 import React from "react";
 
 function useLocalStorage(itemName, initialValue) {
-    
-    const localStorageItem = localStorage.getItem(itemName);
+    const [item, setItem] = React.useState(() => {
+        const localStorageItem = localStorage.getItem(itemName);
+        
+        if (!localStorageItem) {
+            const skins = [];
+            for (let i = 1; i < 6; i++) {
+                skins.push({
+                    img: require(`../Assets/image(${i}).jpg`),
+                    isWished: false,
+                    isOwned: false,
+                    name: `Skin ${i}`,
+                });
+            }
+            localStorage.setItem(itemName, JSON.stringify(skins));
+            return skins; 
+        } 
+        
+        return JSON.parse(localStorageItem);
+    });
 
-    let parsedItem;
-
-    if (!localStorageItem) {
-        localStorage.setItem(itemName, JSON.stringify(initialValue));
-        parsedItem = initialValue;
-    } else {
-        parsedItem = JSON.parse(localStorageItem);
-    }
-
-    const [item, setItem] = React.useState(parsedItem);
+    console.log(item)
 
     const saveItem = (newItem) => {
         localStorage.setItem(itemName, JSON.stringify(newItem));
@@ -22,7 +30,7 @@ function useLocalStorage(itemName, initialValue) {
 
     return {
         item,
-        saveItem
+        saveItem,
     };
 }
 

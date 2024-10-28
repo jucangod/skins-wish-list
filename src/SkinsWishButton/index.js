@@ -1,7 +1,10 @@
-function SkinsWishButton({showWishList}) {
+import React from "react";
+
+function SkinsWishButton({findSection}) {
     return(
         <button
-            onClick={showWishList}
+            className="wishButton"
+            // onClick={findSection}
         >
             Wish
         </button>

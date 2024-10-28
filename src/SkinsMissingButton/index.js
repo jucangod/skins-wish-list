@@ -1,7 +1,8 @@
-function SkinsMissingButton({showMissingList}) {
+function SkinsMissingButton({findSection}) {
     return(
         <button
-            onClick={showMissingList}
+            className="missingButton"
+            // onClick={findSection}
         >
             Missing
         </button>
