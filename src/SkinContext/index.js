@@ -1,152 +1,169 @@
-import React from "react";
-import { useLocalStorage } from "./useLocalStorage";
+import React, { useState, useEffect } from "react";
 
 const SkinContext = React.createContext();
 
-function SkinProvider({children}) {
-    const {
-        item: skin,
-        saveItem: saveSkin,
-    } = useLocalStorage('defaultSkins', []);
+const SkinProvider = ({ children }) => {
+    const [missingSkins, setMissingSkins] = useState([])
+    const [ownedSkins, setOwnedSkins] = useState([])
+    const [wishedSkins, setWishedSkins] = useState([])
 
-    const [wishButton, setWishButton] = React.useState(false);
-    const [ownButton, setOwnButton] = React.useState(false);
-    const [deleteButton, setDeleteButton] = React.useState(false);
-    const [activeButton, setActiveButton] = React.useState('');
-    const [missingSkinsList, setMissingSkinsList] = React.useState([]);
-    const [ownedSkinsList, setOwnedSkinsList] = React.useState([]);
-    const [wishSkinsList, setWishSkinsList] = React.useState([]);
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/skins/missing')
+        .then(res => res.json())
+        .then(res => setMissingSkins(res))
+    }, [])
 
-    // Toggle de los botones para añadir propiedades
-    const toggleWishButton = () => {
-        if (ownButton || deleteButton) {
-            setOwnButton(false);
-            setDeleteButton(false);
-            setOwnButton((prev) => !prev);
-        }
-        console.log(wishButton, ownButton, deleteButton);
-        setActiveButton('wish');
-        console.log('El boton activo es Wish');
-    }
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/skins/owned')
+        .then(res => res.json())
+        .then(res => setOwnedSkins(res))
+    }, [])
 
-    const toggleOwnButton = () => {
-        if (deleteButton || wishButton) {
-            setDeleteButton(false);
-            setWishButton(false);
-            setOwnButton((prev) => !prev);
-        }
-        console.log(ownButton, wishButton, deleteButton);
-        setActiveButton('own');
-        console.log('El boton activo es own');
-    }
+    useEffect(() => {
+        fetch('http://127.0.0.1:8000/skins/wished')
+        .then(res => res.json())
+        .then(res => setWishedSkins(res))
+    }, [])
 
-    const toggleDeleteButton = () => {
-        if (ownButton || wishButton) {
-            setOwnButton(false);
-            setWishButton(false);
-            setDeleteButton((prev) => !prev);
-        }
-        console.log(deleteButton, ownButton, wishButton);
-        setActiveButton('delete');
-        console.log('El boton activo es delete');
-    };
+    console.log(missingSkins)
 
-    //Aqui se maneja la logica para saber cuál es el boton presionado
-    const toggleButtons = (event) => {
-        const classNameButton = event.target.className
-        switch(classNameButton){
-            case 'AddWishedSkinButton':
-                toggleWishButton()
-                break;
-            case 'AddOwnedSkinButton':
-                toggleOwnButton();
-                break;
-            case 'DeleteSkinsButton':
-                toggleDeleteButton();
-                break;
-            default:
-                console.log('No se seleccionó ningun boton')
-                break;
-        }
-    }
-
-    //Aqui se maneja la logica para saber cuál es el boton presionado
-    const findActiveButton = (name) => {
-        switch(activeButton){
-            case 'wish':
-                addWishSkin(name)
-                break;
-            case 'own':
-                addOwnSkin(name);
-                break;
-            case 'delete':
-                deleteSkin(name);
-                break;
-        }
-    }
-
-    //Añadir sus propiedades respectivas de las skins
-    const addWishSkin = (name) => {
-        const newWishSkin = [...skin];
-        const skinIndex = newWishSkin.findIndex(
-            (skin) => skin.name === name
-        );
-        console.log(skinIndex)
-        console.log(typeof(newWishSkin[skinIndex]))
-        if (skinIndex !== -1) {  
-            newWishSkin[skinIndex].isWished = true;
-            saveSkin(newWishSkin);
-        } else {
-            console.error("Skin no encontrada:", name);
-        }
-    }
-
-    const addOwnSkin = (name) => {
-        const newOwnSkin = [...skin];
-        const skinIndex = newOwnSkin.findIndex(
-            (skin) => skin.name === name
-        );
-        newOwnSkin[skinIndex].isOwned = true;
-        saveSkin(newOwnSkin)
-    }
-
-    const deleteSkin = (name) => {
-        const newDeleteSkin = [...skin];
-        const skinIndex = newDeleteSkin.findIndex(
-            (skin) => skin.name === name
-        );
-        if (skinIndex !== -1) {  
-            newDeleteSkin[skinIndex].isWished = false;
-            newDeleteSkin[skinIndex].isOwned = false;
-            saveSkin(newDeleteSkin);
-        } else {
-            console.error(`No se encontró la skin con el nombre: ${name}`);
-        }
-    }
-
-    // Filtrar skins segun se requiera
-    const missingSkins = skin.filter((skin) =>{
-        return !skin.isOwned && !skin.isWished;
-    })
-
-    React.useEffect(() => {
-        setMissingSkinsList(missingSkins);
-        console.log('Lista de skins faltantes: ',missingSkins);
-    }, [skin]);
-
-    return(
-        <SkinContext.Provider
-            value={{
-                toggleButtons,
-                findActiveButton,
-                missingSkinsList,
-                ownedSkinsList,
-                wishSkinsList,
-            }}
-        >
+    return (
+        <SkinContext.Provider value={{ 
+            missingSkins,
+            wishedSkins,
+            ownedSkins
+        }}>
             {children}
         </SkinContext.Provider>
     );
 };
 
-export { SkinContext, SkinProvider };
+export { SkinProvider, SkinContext }
+
+// export { SkinProvider, SkinContext };
+
+// import { useLocalStorage } from "./useLocalStorage";
+
+// function SkinProvider({children}) {
+//     const {
+//         item: skin,
+//         saveItem: saveSkin,
+//     } = useLocalStorage('skins', []);
+
+//     // const [wishButton, setWishButton] = React.useState(false);
+//     // const [ownButton, setOwnButton] = React.useState(false);
+//     // const [deleteButton, setDeleteButton] = React.useState(false);
+//     // const [activeButton, setActiveButton] = React.useState('');
+
+//     // // Toggle de los botones para añadir propiedades
+//     // const toggleWishButton = () => {
+//     //     if (ownButton || deleteButton) {
+//     //         setOwnButton(false);
+//     //         setDeleteButton(false);
+//     //         setOwnButton((prev) => !prev);
+//     //     }
+//     //     console.log(wishButton, ownButton, deleteButton);
+//     //     setActiveButton('wish');
+//     //     console.log('El boton activo es Wish');
+//     // }
+
+//     // const toggleOwnButton = () => {
+//     //     if (deleteButton || wishButton) {
+//     //         setDeleteButton(false);
+//     //         setWishButton(false);
+//     //         setOwnButton((prev) => !prev);
+//     //     }
+//     //     console.log(ownButton, wishButton, deleteButton);
+//     //     setActiveButton('own');
+//     //     console.log('El boton activo es own');
+//     // }
+
+//     // const toggleDeleteButton = () => {
+//     //     if (ownButton || wishButton) {
+//     //         setOwnButton(false);
+//     //         setWishButton(false);
+//     //         setDeleteButton((prev) => !prev);
+//     //     }
+//     //     console.log(deleteButton, ownButton, wishButton);
+//     //     setActiveButton('delete');
+//     //     console.log('El boton activo es delete');
+//     // };
+
+//     // //Aqui se maneja la logica para saber cuál es el boton presionado
+//     // const toggleButtons = (event) => {
+//     //     const classNameButton = event.target.className
+//     //     switch(classNameButton){
+//     //         case 'AddWishedSkinButton':
+//     //             toggleWishButton()
+//     //             break;
+//     //         case 'AddOwnedSkinButton':
+//     //             toggleOwnButton();
+//     //             break;
+//     //         case 'DeleteSkinsButton':
+//     //             toggleDeleteButton();
+//     //             break;
+//     //         default:
+//     //             console.log('No se seleccionó ningun boton')
+//     //             break;
+//     //     }
+//     // }
+
+//     // //Aqui se maneja la logica para saber cuál es el boton presionado
+//     // const findActiveButton = (name) => {
+//     //     switch(activeButton){
+//     //         case 'wish':
+//     //             addWishSkin(name)
+//     //             break;
+//     //         case 'own':
+//     //             addOwnSkin(name);
+//     //             break;
+//     //         case 'delete':
+//     //             deleteSkin(name);
+//     //             break;
+//     //     }
+//     // }
+
+//     //Añadir sus propiedades respectivas de las skins
+//     // const addWishSkin = (name) => {
+        
+//     // }
+
+//     // const addOwnSkin = (name) => {
+        
+//     // }
+
+//     // const deleteSkin = (name) => {
+        
+//     // }
+
+//     // Skins faltantes
+//     const missingSkins = skin.filter(
+//         skin => !skin.isOwned && !skin.isWished
+//     );
+
+//     // Skins Deseadas
+//     const wishedSkins = skin.filter(
+//         skin => !skin.isOwned && skin.isWished
+//     );
+
+//     // Skins faltantes
+//     const ownedSkins = skin.filter(
+//         skin => skin.isOwned && !skin.isWished
+//     );
+
+//     return(
+//         <SkinContext.Provider
+//             value={{
+//                 // toggleButtons,
+//                 // findActiveButton,
+//                 missingSkins,
+//                 wishedSkins,
+//                 ownedSkins,
+//             }}
+//         >
+//             {children}
+//         </SkinContext.Provider>
+//     );
+// };
+
+// export { SkinContext, SkinProvider };

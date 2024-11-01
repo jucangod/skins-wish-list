@@ -1,8 +1,11 @@
 import React from "react";
 
-function SkinItem() {
+function SkinItem({src}) {
     return (
-        <img></img>
+        <img
+            src={src}
+            alt="Skin"
+        ></img>
     )
 }
 

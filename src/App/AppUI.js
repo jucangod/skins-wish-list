@@ -1,78 +1,120 @@
-import React from 'react'
-import { SkinList } from '../SkinList'
-import { SkinsMenu } from '../SkinsMenu'
-import { SkinItem } from '../SkinItem';
-import { AddWishedSkinButton } from '../AddWishedSkinButton'
-import { DeleteSkinButton } from '../DeleteSkinButton'
-import { AddOwnedSkinButton } from '../AddOwnedSkinButton'
+import React from "react";
 import { SkinContext } from '../SkinContext';
-import { SkinsMissingButton } from '../SkinsMissingButton'
-import { SkinsOwnedButton } from '../SkinsOwnedButton'
-import { SkinsWishButton } from '../SkinsWishButton'
+import { SkinItem } from '../SkinItem';
+import { SkinList } from '../SkinList'
 
-function AppUI(){
+function AppUI() {
     const {
-        toggleButtons,
         missingSkins,
-        ownedSkinsList,
-        wishSkinsList,
-        findSection,
+        ownedSkins,
+        wishedSkins
     } = React.useContext(SkinContext);
 
     return (
         <>
-            <SkinsMenu>
-                <SkinsMissingButton
-                    missingSkins={missingSkins}
-                >
-                    <SkinList>
-                        <SkinItem
-                        />
-                    </SkinList>
-                </SkinsMissingButton>
-                <SkinsWishButton
-                    findSection={findSection}
-                >
-                    <SkinList>
-                    {wishSkinsList.map((skin) => (
-                        <SkinItem
-                        key={skin.index}
-                        img={skin.img}
-                        isOwned={skin.isOwned}
-                        isWished={skin.isWished}
-                        />
-                    ))}
-                    </SkinList>
-                </SkinsWishButton>
-                <SkinsOwnedButton
-                    findSection={findSection}
-                >
-                    <SkinList>
-                    {ownedSkinsList.map((skin) => (
-                        <SkinItem
-                        key={skin.index}
-                        img={skin.img}
-                        isOwned={skin.isOwned}
-                        isWished={skin.isWished}
-                        />
-                    ))}
-                    </SkinList>
-                </SkinsOwnedButton>
-            </SkinsMenu>
-
-            <AddWishedSkinButton 
-                toggleButtons={toggleButtons}
-            />
-            <AddOwnedSkinButton
-                toggleButtons={toggleButtons}
-            />
-            <DeleteSkinButton
-                toggleButtons={toggleButtons}
-            />
-
-            <SkinItem></SkinItem>
-      </>
+        <SkinList>
+            {missingSkins.map((skin) => 
+                <SkinItem 
+                    key={skin.id}
+                    src={skin.url}
+                />
+            )}
+        </SkinList>
+            
+        </>
     );
 }
 
 export { AppUI };
+
+//     return (
+//         <>
+//             {missingSkins.map((skin) =>
+//                 <SkinItem
+//                     key={skin.id}
+//                     img={skin.url}
+//                 />
+//             )}
+
+//             {/* <SkinsMenu>
+//                 <SkinsMissingButton>
+//                     <SkinList>
+//                         {missingSkins.map((skin) =>
+//                             <SkinItem
+//                                 key={skin.id}
+//                                 img={skin.url}
+//                             />
+//                         )}
+//                     </SkinList>
+//                 </SkinsMissingButton>
+//             </SkinsMenu> */}
+//         </>
+//     );
+
+// import { SkinItem } from '../SkinItem';
+// import { AddWishedSkinButton } from '../AddWishedSkinButton'
+// import { DeleteSkinButton } from '../DeleteSkinButton'
+// import { AddOwnedSkinButton } from '../AddOwnedSkinButton'
+// import { SkinsMissingButton } from '../SkinsMissingButton'
+// import { SkinsOwnedButton } from '../SkinsOwnedButton'
+// import { SkinsWishButton } from '../SkinsWishButton'
+
+// function AppUI(){
+//     const {
+//         toggleButtons,
+//         // missingSkins,
+//         // ownedSkins,
+//         // wishSkins,
+//     } = React.useContext(SkinContext);
+
+//     return (
+//         <>
+//             <SkinsMenu>
+//                 <SkinsMissingButton>
+//                     <SkinList>
+//                     {/* {missingSkins.map((skin) => (
+//                         <SkinItem
+//                             key={skin.id}
+//                             img={skin.url}
+//                         />
+//                     ))} */}
+//                     </SkinList>
+//                 </SkinsMissingButton>
+//                 <SkinsWishButton>
+//                     <SkinList>
+//                     {/* {wishSkins.map((skin) => (
+//                         <SkinItem
+//                             key={skin.id}
+//                             img={skin.img}
+//                         />
+//                     ))} */}
+//                     </SkinList>
+//                 </SkinsWishButton>
+//                 <SkinsOwnedButton>
+//                     <SkinList>
+//                     {/* {ownedSkins.map((skin) => (
+//                         <SkinItem
+//                             key={skin.id}
+//                             img={skin.url}
+//                         />
+//                     ))} */}
+//                     </SkinList>
+//                 </SkinsOwnedButton>
+//             </SkinsMenu>
+
+//             <AddWishedSkinButton 
+//                 toggleButtons={toggleButtons}
+//             />
+//             <AddOwnedSkinButton
+//                 toggleButtons={toggleButtons}
+//             />
+//             <DeleteSkinButton
+//                 toggleButtons={toggleButtons}
+//             />
+
+//             <SkinItem></SkinItem>
+//       </>
+//     );
+// }
+
+// export { AppUI };

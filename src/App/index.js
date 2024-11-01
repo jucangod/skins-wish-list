@@ -1,13 +1,13 @@
-import React from 'react'
-import { AppUI } from './AppUI'
-import { SkinProvider } from '../SkinContext';
+import React, { useEffect } from "react";
+import { SkinProvider } from '../SkinContext'; 
+import { AppUI } from './AppUI';
 
 function App() {
-    return(
-        <SkinProvider> 
-            <AppUI/>
+    return (
+        <SkinProvider>
+            <AppUI />
         </SkinProvider>
     );
-};
+}
 
 export default App;
