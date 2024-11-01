@@ -3,39 +3,53 @@ import React, { useState, useEffect } from "react";
 const SkinContext = React.createContext();
 
 const SkinProvider = ({ children }) => {
-    const [missingSkins, setMissingSkins] = useState([])
-    const [ownedSkins, setOwnedSkins] = useState([])
-    const [wishedSkins, setWishedSkins] = useState([])
+    // Definición del estado para las diferentes categorías de skins
+    const [missingSkins, setMissingSkins] = useState([]);
+    const [ownedSkins, setOwnedSkins] = useState([]);
+    const [wishedSkins, setWishedSkins] = useState([]);
+    const [displayedSkins, setDisplayedSkins] = useState([]);
 
+    // Fetch para obtener las skins faltantes
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/skins/missing')
-        .then(res => res.json())
-        .then(res => setMissingSkins(res))
-    }, [])
+        fetch("http://127.0.0.1:8000/skins/missing")
+        .then((res) => res.json())
+        .then((data) => {
+            setMissingSkins(data);
+            setDisplayedSkins(data); // Muestra las skins faltantes por defecto
+        });
+    }, []);
 
+    // Fetch para obtener las skins obtenidas
     useEffect(() => {
-        fetch('http://127.0.0.1:8000/skins/owned')
-        .then(res => res.json())
-        .then(res => setOwnedSkins(res))
-    }, [])
+        fetch("http://127.0.0.1:8000/skins/owned")
+        .then((res) => res.json())
+        .then((data) => setOwnedSkins(data));
+    }, []);
 
-    useEffect(() => {
-        fetch('http://127.0.0.1:8000/skins/wished')
-        .then(res => res.json())
-        .then(res => setWishedSkins(res))
-    }, [])
+  // Fetch para obtener las skins deseadas
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/skins/wished")
+      .then((res) => res.json())
+      .then((data) => setWishedSkins(data));
+  }, []);
 
-    console.log(missingSkins)
+  // Actualización de las skins mostradas
+  const showMissingSkins = () => setDisplayedSkins(missingSkins);
+  const showWishedSkins = () => setDisplayedSkins(wishedSkins);
+  const showOwnedSkins = () => setDisplayedSkins(ownedSkins);
 
-    return (
-        <SkinContext.Provider value={{ 
-            missingSkins,
-            wishedSkins,
-            ownedSkins
-        }}>
-            {children}
-        </SkinContext.Provider>
-    );
+  return (
+    <SkinContext.Provider
+      value={{
+        showMissingSkins,
+        showOwnedSkins,
+        showWishedSkins,
+        displayedSkins,
+      }}
+    >
+      {children}
+    </SkinContext.Provider>
+  );
 };
 
 export { SkinProvider, SkinContext }

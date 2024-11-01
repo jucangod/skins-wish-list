@@ -1,26 +1,42 @@
 import React from "react";
 import { SkinContext } from '../SkinContext';
 import { SkinItem } from '../SkinItem';
-import { SkinList } from '../SkinList'
+import { SkinList } from '../SkinList';
+import { SkinsMenu } from '../SkinsMenu';
+import { SkinsMissingButton } from '../SkinsMissingButton';
+import { SkinsWishedButton } from '../SkinsWishedButton';
+import { SkinsOwnedButton } from '../SkinsOwnedButton';
 
 function AppUI() {
     const {
-        missingSkins,
-        ownedSkins,
-        wishedSkins
+        showMissingSkins,
+        showWishedSkins,
+        showOwnedSkins,
+        displayedSkins
     } = React.useContext(SkinContext);
 
     return (
         <>
-        <SkinList>
-            {missingSkins.map((skin) => 
-                <SkinItem 
-                    key={skin.id}
-                    src={skin.url}
+            <SkinsMenu>
+                <SkinsMissingButton
+                    showMissingSkins={showMissingSkins}
                 />
-            )}
-        </SkinList>
-            
+                <SkinsWishedButton 
+                    showWishedSkins={showWishedSkins}
+                />
+                <SkinsOwnedButton 
+                    showOwnedSkins={showOwnedSkins}
+                />
+            </SkinsMenu>
+
+            <SkinList>
+                {displayedSkins.map((skin) => (
+                    <SkinItem 
+                        key={skin.id}
+                        src={skin.url} 
+                    />
+                ))}
+            </SkinList>
         </>
     );
 }
@@ -35,19 +51,6 @@ export { AppUI };
 //                     img={skin.url}
 //                 />
 //             )}
-
-//             {/* <SkinsMenu>
-//                 <SkinsMissingButton>
-//                     <SkinList>
-//                         {missingSkins.map((skin) =>
-//                             <SkinItem
-//                                 key={skin.id}
-//                                 img={skin.url}
-//                             />
-//                         )}
-//                     </SkinList>
-//                 </SkinsMissingButton>
-//             </SkinsMenu> */}
 //         </>
 //     );
 

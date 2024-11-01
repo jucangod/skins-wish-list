@@ -1,12 +1,12 @@
-// function SkinsOwnedButton({findSection}) {
-//     return(
-//         <button
-//             className="ownedButton"
-//             // onClick={findSection}
-//         >
-//             Own
-//         </button>
-//     );
-// };
+function SkinsOwnedButton({showOwnedSkins}) {
+    return(
+        <button
+            className="ownedButton"
+            onClick={showOwnedSkins}
+        >
+            Own
+        </button>
+    );
+};
 
-// export { SkinsOwnedButton }
+export { SkinsOwnedButton }
