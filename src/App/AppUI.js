@@ -6,13 +6,19 @@ import { SkinsMenu } from '../SkinsMenu';
 import { SkinsMissingButton } from '../SkinsMissingButton';
 import { SkinsWishedButton } from '../SkinsWishedButton';
 import { SkinsOwnedButton } from '../SkinsOwnedButton';
+import { AddWishedSkinButton } from '../AddWishedSkinButton'
+import { AddOwnedSkinButton } from '../AddOwnedSkinButton'
+import { DeleteSkinButton } from '../DeleteSkinButton'
 
 function AppUI() {
     const {
         showMissingSkins,
         showWishedSkins,
         showOwnedSkins,
-        displayedSkins
+        displayedSkins,
+        isDeleteButtonVisible,
+        isOwnedButtonVisible,
+        isWishedButtonVisible
     } = React.useContext(SkinContext);
 
     return (
@@ -28,6 +34,10 @@ function AppUI() {
                     showOwnedSkins={showOwnedSkins}
                 />
             </SkinsMenu>
+
+            {isOwnedButtonVisible && <AddOwnedSkinButton />}
+            {isWishedButtonVisible && <AddWishedSkinButton />}
+            {isDeleteButtonVisible && <DeleteSkinButton />}
 
             <SkinList>
                 {displayedSkins.map((skin) => (

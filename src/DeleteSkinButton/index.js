@@ -1,15 +1,15 @@
-// import React from "react";
+import React from "react";
 
-// function DeleteSkinButton({ toggleButtons }) {
+function DeleteSkinButton({ toggleButtons }) {
 
-//     return(
-//         <button
-//             className="DeleteSkinsButton"
-//             onClick={toggleButtons}
-//         >
-//             Delete Skins
-//         </button>
-//     );
-// };
+    return(
+        <button
+            className="DeleteSkinsButton"
+            onClick={toggleButtons}
+        >
+            Delete Skins
+        </button>
+    );
+};
 
-// export { DeleteSkinButton }
+export { DeleteSkinButton }
