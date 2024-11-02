@@ -15,54 +15,58 @@ const SkinProvider = ({ children }) => {
     const [isOwnedActive, setIsOwnedActive] = useState(false);
     const [isDeleteActive, setIsDeleteActive] = useState(false);
 
-    // Fetch para obtener las skins faltantes
-    useEffect(() => {
-        fetch("http://127.0.0.1:8000/skins/missing")
-        .then((res) => res.json())
-        .then((data) => {
-            setMissingSkins(data);
-        });
-    }, []);
+    // Función para obtener todas las skins
+    const fetchData = async () => {
+        try {
+            const missingResponse = await fetch("http://127.0.0.1:8000/skins/missing");
+            const missingData = await missingResponse.json();
+            setMissingSkins(missingData);
 
-    // Fetch para obtener las skins obtenidas
-    useEffect(() => {
-        fetch("http://127.0.0.1:8000/skins/owned")
-        .then((res) => res.json())
-        .then((data) => setOwnedSkins(data));
-    }, []);
+            const ownedResponse = await fetch("http://127.0.0.1:8000/skins/owned");
+            const ownedData = await ownedResponse.json();
+            setOwnedSkins(ownedData);
 
-    // Fetch para obtener las skins deseadas
+            const wishedResponse = await fetch("http://127.0.0.1:8000/skins/wished");
+            const wishedData = await wishedResponse.json();
+            setWishedSkins(wishedData);
+
+            // Establece las missingSkins como las mostradas por defecto
+            setDisplayedSkins(missingData);
+        } catch (error) {
+            console.error("Error al cargar las skins:", error);
+        }
+    };
+
+    // Ejecuta fetchData cuando el componente se monta
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/skins/wished")
-        .then((res) => res.json())
-        .then((data) => setWishedSkins(data));
+        fetchData();
     }, []);
 
     // Actualización de las skins mostradas junto a sus respectivos botones
-    const showMissingSkins = (() => {
+    const showMissingSkins = () => {
         setDisplayedSkins(missingSkins);
         setDeleteButtonVisible(false);
         setWishedButtonVisible(true);
         setOwnedButtonVisible(true);
-    });
+    };
 
-    const showWishedSkins = (() => {
+    const showWishedSkins = () => {
         setDisplayedSkins(wishedSkins);
         setDeleteButtonVisible(true);
         setWishedButtonVisible(false);
         setOwnedButtonVisible(true);
-    });
+    };
 
-    const showOwnedSkins = (() => {
+    const showOwnedSkins = () => {
         setDisplayedSkins(ownedSkins);
         setDeleteButtonVisible(true);
         setWishedButtonVisible(true);
         setOwnedButtonVisible(false);
-    });
+    };
 
-    //Activar y desactivar boton eliminar
+    // Activar y desactivar boton eliminar
     const toggleDeleteButton = () => {
-        setIsDeleteActive(prevState => {
+        setIsDeleteActive((prevState) => {
             const newState = !prevState;
             console.log(`Boton eliminar ${newState ? "activado" : "desactivado"}`);
             return newState;
@@ -71,20 +75,20 @@ const SkinProvider = ({ children }) => {
         setIsWishedActive(false);
     };
 
-    //Activar y desactivar boton deseado
+    // Activar y desactivar boton deseado
     const toggleWishedButton = () => {
-        setIsWishedActive(prevState => {
+        setIsWishedActive((prevState) => {
             const newState = !prevState;
             console.log(`Boton deseado ${newState ? "activado" : "desactivado"}`);
             return newState;
         });
         setIsDeleteActive(false);
-        setIsWishedActive(false);
+        setIsOwnedActive(false);
     };
 
-    //Activar y desactivar boton obtenido
+    // Activar y desactivar boton obtenido
     const toggleOwnedButton = () => {
-        setIsOwnedActive(prevState => {
+        setIsOwnedActive((prevState) => {
             const newState = !prevState;
             console.log(`Boton obtenido ${newState ? "activado" : "desactivado"}`);
             return newState;
@@ -93,69 +97,72 @@ const SkinProvider = ({ children }) => {
         setIsWishedActive(false);
     };
 
-    const findActiveButton = ((id) => {
-        if(isWishedActive) {
-            addWishedSkin(id)
+    const findActiveButton = (id) => {
+        if (isWishedActive) {
+            addWishedSkin(id);
         } else if (isOwnedActive) {
-            addOwnedSkin(id)
+            addOwnedSkin(id);
         } else if (isDeleteActive) {
-            deleteSkin(id)
+            deleteSkin(id);
         }
-    })
+    };
 
-    const addWishedSkin = (id) => {
-        fetch(`http://127.0.0.1:8000/skins/wished/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then(response => {
+    // Añadir skin deseada
+    const addWishedSkin = async (id) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/skins/wished/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
             if (!response.ok) {
                 throw new Error("Error al añadir la skin deseada");
             }
-            return response.json();
-        })
-        .then(data => console.log("Skin añadida como obtenida:", data))
-        .catch(error => console.error("Error al añadir skin deseada:", error));
+            console.log("Skin añadida como deseada");
+            fetchData(); // Refresca los datos después de añadir
+        } catch (error) {
+            console.error("Error al añadir skin deseada:", error);
+        }
     };
-    
 
     // Añadir skin obtenida
-    const addOwnedSkin = ((id) => {
-        fetch(`http://127.0.0.1:8000/skins/owned/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then(response => {
+    const addOwnedSkin = async (id) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/skins/owned/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
             if (!response.ok) {
-                throw new Error("Error al añadir la skin deseada");
+                throw new Error("Error al añadir la skin obtenida");
             }
-            return response.json();
-        })
-        .then(data => console.log("Skin añadida como obtenida:", data))
-        .catch(error => console.error("Error al añadir skin deseada:", error));
-    });
+            console.log("Skin añadida como obtenida");
+            fetchData(); // Refresca los datos después de añadir
+        } catch (error) {
+            console.error("Error al añadir skin obtenida:", error);
+        }
+    };
 
-    //Eliminar skin
-    const deleteSkin = ((id) => {
-        fetch(`http://127.0.0.1:8000/skins/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        })
-        .then(response => {
+    // Eliminar skin
+    const deleteSkin = async (id) => {
+        try {
+            const response = await fetch(`http://127.0.0.1:8000/skins/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
             if (!response.ok) {
-                throw new Error("Error al añadir la skin deseada");
+                throw new Error("Error al eliminar la skin");
             }
-            return response.json();
-        })
-        .then(data => console.log("Skin añadida como faltante:", data))
-        .catch(error => console.error("Error al añadir skin deseada:", error));
-    });
+            console.log("Skin eliminada");
+            fetchData(); // Refresca los datos después de eliminar
+        } catch (error) {
+            console.error("Error al eliminar skin:", error);
+        }
+    };
 
     return (
         <SkinContext.Provider
@@ -170,12 +177,12 @@ const SkinProvider = ({ children }) => {
                 toggleDeleteButton,
                 toggleOwnedButton,
                 toggleWishedButton,
-                findActiveButton
+                findActiveButton,
             }}
         >
-        {children}
+            {children}
         </SkinContext.Provider>
     );
 };
 
-export { SkinProvider, SkinContext }
+export { SkinProvider, SkinContext };
