@@ -8,7 +8,7 @@
     justify-content: center; /* Centra horizontalmente el contenido */
     align-items: center; /* Centra verticalmente el contenido */
     cursor: pointer; /* Cambia el cursor al pasar sobre la tarjeta */
-    margin: 15px
+    margin: 15px;
 }
 
 .card2 {
