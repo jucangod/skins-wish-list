@@ -60,26 +60,38 @@ const SkinProvider = ({ children }) => {
         setOwnedButtonVisible(false);
     });
 
-    //Activar los botones segun se requiera
-    const activeDeleteButton = (() => {
-        setIsDeleteActive(true);
+    //Activar y desactivar boton eliminar
+    const toggleDeleteButton = () => {
+        setIsDeleteActive(prevState => {
+            const newState = !prevState;
+            console.log(`Boton eliminar ${newState ? "activado" : "desactivado"}`);
+            return newState;
+        });
         setIsOwnedActive(false);
         setIsWishedActive(false);
-        console.log('Boton eliminar activado')
-    });
+    };
 
-    const activeWishedButton = (() => {
+    //Activar y desactivar boton deseado
+    const toggleWishedButton = () => {
+        setIsWishedActive(prevState => {
+            const newState = !prevState;
+            console.log(`Boton deseado ${newState ? "activado" : "desactivado"}`);
+            return newState;
+        });
         setIsDeleteActive(false);
-        setIsOwnedActive(false);
-        setIsWishedActive(true);
-        console.log('Boton deseado activado')
-    });
-
-    const activeOwnedButton = (() => {
-        setIsDeleteActive(false);
-        setIsOwnedActive(true);
         setIsWishedActive(false);
-    });
+    };
+
+    //Activar y desactivar boton obtenido
+    const toggleOwnedButton = () => {
+        setIsOwnedActive(prevState => {
+            const newState = !prevState;
+            console.log(`Boton obtenido ${newState ? "activado" : "desactivado"}`);
+            return newState;
+        });
+        setIsDeleteActive(false);
+        setIsWishedActive(false);
+    };
 
     const findActiveButton = ((id) => {
         if(isWishedActive) {
@@ -104,7 +116,7 @@ const SkinProvider = ({ children }) => {
             }
             return response.json();
         })
-        .then(data => console.log("Skin añadida como deseada:", data))
+        .then(data => console.log("Skin añadida como obtenida:", data))
         .catch(error => console.error("Error al añadir skin deseada:", error));
     };
     
@@ -123,7 +135,7 @@ const SkinProvider = ({ children }) => {
             }
             return response.json();
         })
-        .then(data => console.log("Skin añadida como deseada:", data))
+        .then(data => console.log("Skin añadida como obtenida:", data))
         .catch(error => console.error("Error al añadir skin deseada:", error));
     });
 
@@ -141,7 +153,7 @@ const SkinProvider = ({ children }) => {
             }
             return response.json();
         })
-        .then(data => console.log("Skin añadida como deseada:", data))
+        .then(data => console.log("Skin añadida como faltante:", data))
         .catch(error => console.error("Error al añadir skin deseada:", error));
     });
 
@@ -155,9 +167,9 @@ const SkinProvider = ({ children }) => {
                 isDeleteButtonVisible,
                 isOwnedButtonVisible,
                 isWishedButtonVisible,
-                activeDeleteButton,
-                activeOwnedButton,
-                activeWishedButton,
+                toggleDeleteButton,
+                toggleOwnedButton,
+                toggleWishedButton,
                 findActiveButton
             }}
         >

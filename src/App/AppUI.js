@@ -19,9 +19,9 @@ function AppUI() {
         isDeleteButtonVisible,
         isOwnedButtonVisible,
         isWishedButtonVisible,
-        activeDeleteButton,
-        activeOwnedButton,
-        activeWishedButton,
+        toggleDeleteButton,
+        toggleOwnedButton,
+        toggleWishedButton,
         findActiveButton
     } = React.useContext(SkinContext);
 
@@ -40,13 +40,13 @@ function AppUI() {
             </SkinsMenu>
 
             {isOwnedButtonVisible && <AddOwnedSkinButton 
-                activeOwnedButton={activeOwnedButton}
+                toggleOwnedButton={toggleOwnedButton}
             />}
             {isWishedButtonVisible && <AddWishedSkinButton 
-                activeWishedButton={activeWishedButton}
+                toggleWishedButton={toggleWishedButton}
             />}
             {isDeleteButtonVisible && <DeleteSkinButton 
-                activeDeleteButton={activeDeleteButton}
+                toggleDeleteButton={toggleDeleteButton}
             />}
 
             <SkinList>
