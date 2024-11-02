@@ -1,14 +1,14 @@
 import React from "react";
+import "./SkinItem.css"
 
-function SkinItem({src, id, findActiveButton}) {
+function SkinItem({ src, id, findActiveButton }) {
     return (
-        <img
-            id={id}
-            src={src}
-            alt="Skin"
-            onClick={() => findActiveButton(id)}
-        ></img>
-    )
+        <div className="card" onClick={() => findActiveButton(id)}>
+            <div className="card2">
+                <img src={src} alt="Skin" />
+            </div>
+        </div>
+    );
 }
 
 export { SkinItem }

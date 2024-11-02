@@ -1,0 +1,15 @@
+.SkinList {
+    list-style-type: none;
+    padding: 0; 
+    margin: 0; 
+    display: flex;
+    flex-wrap: wrap; 
+    justify-content: center;
+    align-items: center;
+    gap: 0; 
+}
+
+.SkinList li {
+    display: inline-block; 
+    margin: 0; 
+}

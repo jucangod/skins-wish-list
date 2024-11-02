@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 const SkinContext = React.createContext();
 
 const SkinProvider = ({ children }) => {
-    // Definición del estado para las diferentes categorías de skins
     const [missingSkins, setMissingSkins] = useState([]);
     const [ownedSkins, setOwnedSkins] = useState([]);
     const [wishedSkins, setWishedSkins] = useState([]);
-    const [displayedSkins, setDisplayedSkins] = useState(missingSkins);
+    const [displayedSkins, setDisplayedSkins] = useState([]);
     const [isDeleteButtonVisible, setDeleteButtonVisible] = useState(false);
     const [isWishedButtonVisible, setWishedButtonVisible] = useState(true);
     const [isOwnedButtonVisible, setOwnedButtonVisible] = useState(true);
@@ -15,7 +14,6 @@ const SkinProvider = ({ children }) => {
     const [isOwnedActive, setIsOwnedActive] = useState(false);
     const [isDeleteActive, setIsDeleteActive] = useState(false);
 
-    // Función para obtener todas las skins
     const fetchData = async () => {
         try {
             const missingResponse = await fetch("http://127.0.0.1:8000/skins/missing");
@@ -30,19 +28,17 @@ const SkinProvider = ({ children }) => {
             const wishedData = await wishedResponse.json();
             setWishedSkins(wishedData);
 
-            // Establece las missingSkins como las mostradas por defecto
+            // Default display to missing skins
             setDisplayedSkins(missingData);
         } catch (error) {
             console.error("Error al cargar las skins:", error);
         }
     };
 
-    // Ejecuta fetchData cuando el componente se monta
     useEffect(() => {
         fetchData();
     }, []);
 
-    // Actualización de las skins mostradas junto a sus respectivos botones
     const showMissingSkins = () => {
         setDisplayedSkins(missingSkins);
         setDeleteButtonVisible(false);
@@ -64,35 +60,20 @@ const SkinProvider = ({ children }) => {
         setOwnedButtonVisible(false);
     };
 
-    // Activar y desactivar boton eliminar
     const toggleDeleteButton = () => {
-        setIsDeleteActive((prevState) => {
-            const newState = !prevState;
-            console.log(`Boton eliminar ${newState ? "activado" : "desactivado"}`);
-            return newState;
-        });
+        setIsDeleteActive((prevState) => !prevState);
         setIsOwnedActive(false);
         setIsWishedActive(false);
     };
 
-    // Activar y desactivar boton deseado
     const toggleWishedButton = () => {
-        setIsWishedActive((prevState) => {
-            const newState = !prevState;
-            console.log(`Boton deseado ${newState ? "activado" : "desactivado"}`);
-            return newState;
-        });
+        setIsWishedActive((prevState) => !prevState);
         setIsDeleteActive(false);
         setIsOwnedActive(false);
     };
 
-    // Activar y desactivar boton obtenido
     const toggleOwnedButton = () => {
-        setIsOwnedActive((prevState) => {
-            const newState = !prevState;
-            console.log(`Boton obtenido ${newState ? "activado" : "desactivado"}`);
-            return newState;
-        });
+        setIsOwnedActive((prevState) => !prevState);
         setIsDeleteActive(false);
         setIsWishedActive(false);
     };
@@ -107,7 +88,6 @@ const SkinProvider = ({ children }) => {
         }
     };
 
-    // Añadir skin deseada
     const addWishedSkin = async (id) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/skins/wished/${id}`, {
@@ -116,17 +96,18 @@ const SkinProvider = ({ children }) => {
                     "Content-Type": "application/json",
                 },
             });
-            if (!response.ok) {
-                throw new Error("Error al añadir la skin deseada");
-            }
-            console.log("Skin añadida como deseada");
-            fetchData(); // Refresca los datos después de añadir
+            if (!response.ok) throw new Error("Error al añadir la skin deseada");
+
+            const updatedMissingSkins = missingSkins.filter(skin => skin.id !== id);
+            const addedSkin = missingSkins.find(skin => skin.id === id);
+            setMissingSkins(updatedMissingSkins);
+            setWishedSkins([...wishedSkins, addedSkin]);
+            setDisplayedSkins(updatedMissingSkins);
         } catch (error) {
             console.error("Error al añadir skin deseada:", error);
         }
     };
 
-    // Añadir skin obtenida
     const addOwnedSkin = async (id) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/skins/owned/${id}`, {
@@ -135,17 +116,18 @@ const SkinProvider = ({ children }) => {
                     "Content-Type": "application/json",
                 },
             });
-            if (!response.ok) {
-                throw new Error("Error al añadir la skin obtenida");
-            }
-            console.log("Skin añadida como obtenida");
-            fetchData(); // Refresca los datos después de añadir
+            if (!response.ok) throw new Error("Error al añadir la skin obtenida");
+
+            const updatedMissingSkins = missingSkins.filter(skin => skin.id !== id);
+            const addedSkin = missingSkins.find(skin => skin.id === id);
+            setMissingSkins(updatedMissingSkins);
+            setOwnedSkins([...ownedSkins, addedSkin]);
+            setDisplayedSkins(updatedMissingSkins);
         } catch (error) {
             console.error("Error al añadir skin obtenida:", error);
         }
     };
 
-    // Eliminar skin
     const deleteSkin = async (id) => {
         try {
             const response = await fetch(`http://127.0.0.1:8000/skins/${id}`, {
@@ -154,11 +136,18 @@ const SkinProvider = ({ children }) => {
                     "Content-Type": "application/json",
                 },
             });
-            if (!response.ok) {
-                throw new Error("Error al eliminar la skin");
+            if (!response.ok) throw new Error("Error al eliminar la skin");
+
+            const updatedSkins = displayedSkins.filter(skin => skin.id !== id);
+            setDisplayedSkins(updatedSkins);
+
+            if (isWishedActive) {
+                setWishedSkins(prev => prev.filter(skin => skin.id !== id));
+            } else if (isOwnedActive) {
+                setOwnedSkins(prev => prev.filter(skin => skin.id !== id));
+            } else {
+                setMissingSkins(prev => prev.filter(skin => skin.id !== id));
             }
-            console.log("Skin eliminada");
-            fetchData(); // Refresca los datos después de eliminar
         } catch (error) {
             console.error("Error al eliminar skin:", error);
         }

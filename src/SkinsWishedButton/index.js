@@ -1,9 +1,7 @@
-import React from "react";
-
 function SkinsWishedButton({showWishedSkins}) {
     return(
         <button
-            className="wishButton"
+            class="Btn BtnWished"
             onClick={showWishedSkins}
         >
             Wish

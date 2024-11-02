@@ -1,8 +1,10 @@
+import "./SkinsMenu.css"
+
 function SkinsMenu(props) {
     return(
-        <footer className="skins-menu">
+        <header className="skins-menu">
             {props.children}
-        </footer>
+        </header>
     );
 }
 

@@ -1,10 +1,9 @@
 function SkinsOwnedButton({showOwnedSkins}) {
     return(
         <button
-            className="ownedButton"
+            class="Btn BtnOwned"
             onClick={showOwnedSkins}
         >
-            Own
         </button>
     );
 };
