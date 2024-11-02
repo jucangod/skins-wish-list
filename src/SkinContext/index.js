@@ -8,9 +8,12 @@ const SkinProvider = ({ children }) => {
     const [ownedSkins, setOwnedSkins] = useState([]);
     const [wishedSkins, setWishedSkins] = useState([]);
     const [displayedSkins, setDisplayedSkins] = useState(missingSkins);
-    const [isDeleteButtonVisible, setDeleteButtonVisible] = useState(true);
+    const [isDeleteButtonVisible, setDeleteButtonVisible] = useState(false);
     const [isWishedButtonVisible, setWishedButtonVisible] = useState(true);
     const [isOwnedButtonVisible, setOwnedButtonVisible] = useState(true);
+    const [isWishedActive, setIsWishedActive] = useState(false);
+    const [isOwnedActive, setIsOwnedActive] = useState(false);
+    const [isDeleteActive, setIsDeleteActive] = useState(false);
 
     // Fetch para obtener las skins faltantes
     useEffect(() => {
@@ -35,7 +38,7 @@ const SkinProvider = ({ children }) => {
         .then((data) => setWishedSkins(data));
     }, []);
 
-    // Actualización de las skins mostradas
+    // Actualización de las skins mostradas junto a sus respectivos botones
     const showMissingSkins = (() => {
         setDisplayedSkins(missingSkins);
         setDeleteButtonVisible(false);
@@ -57,6 +60,91 @@ const SkinProvider = ({ children }) => {
         setOwnedButtonVisible(false);
     });
 
+    //Activar los botones segun se requiera
+    const activeDeleteButton = (() => {
+        setIsDeleteActive(true);
+        setIsOwnedActive(false);
+        setIsWishedActive(false);
+        console.log('Boton eliminar activado')
+    });
+
+    const activeWishedButton = (() => {
+        setIsDeleteActive(false);
+        setIsOwnedActive(false);
+        setIsWishedActive(true);
+        console.log('Boton deseado activado')
+    });
+
+    const activeOwnedButton = (() => {
+        setIsDeleteActive(false);
+        setIsOwnedActive(true);
+        setIsWishedActive(false);
+    });
+
+    const findActiveButton = ((id) => {
+        if(isWishedActive) {
+            addWishedSkin(id)
+        } else if (isOwnedActive) {
+            addOwnedSkin(id)
+        } else if (isDeleteActive) {
+            deleteSkin(id)
+        }
+    })
+
+    const addWishedSkin = (id) => {
+        fetch(`http://127.0.0.1:8000/skins/wished/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al añadir la skin deseada");
+            }
+            return response.json();
+        })
+        .then(data => console.log("Skin añadida como deseada:", data))
+        .catch(error => console.error("Error al añadir skin deseada:", error));
+    };
+    
+
+    // Añadir skin obtenida
+    const addOwnedSkin = ((id) => {
+        fetch(`http://127.0.0.1:8000/skins/owned/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al añadir la skin deseada");
+            }
+            return response.json();
+        })
+        .then(data => console.log("Skin añadida como deseada:", data))
+        .catch(error => console.error("Error al añadir skin deseada:", error));
+    });
+
+    //Eliminar skin
+    const deleteSkin = ((id) => {
+        fetch(`http://127.0.0.1:8000/skins/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Error al añadir la skin deseada");
+            }
+            return response.json();
+        })
+        .then(data => console.log("Skin añadida como deseada:", data))
+        .catch(error => console.error("Error al añadir skin deseada:", error));
+    });
+
     return (
         <SkinContext.Provider
             value={{
@@ -66,7 +154,11 @@ const SkinProvider = ({ children }) => {
                 displayedSkins,
                 isDeleteButtonVisible,
                 isOwnedButtonVisible,
-                isWishedButtonVisible
+                isWishedButtonVisible,
+                activeDeleteButton,
+                activeOwnedButton,
+                activeWishedButton,
+                findActiveButton
             }}
         >
         {children}
